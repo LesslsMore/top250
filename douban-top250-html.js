@@ -1,0 +1,32 @@
+const request = require('request');
+const fs = require('fs');
+
+const url = 'https://movie.douban.com/top250';
+
+let urls = []
+for(let i = 0; i < 250; i+=25) {
+  urls.push(url + `?start=${i}`)
+
+}
+console.log(urls)
+
+urls.forEach(url => {
+  let top = parseInt(url.split('=')[1]) + 25
+  console.log(top)
+  request(url, (error, response, html) => {
+    if (!error && response.statusCode === 200) {
+      fs.writeFile(`douban-top${top}.html`, html, (err) => {
+        if (err) throw err;
+        console.log('The file has been saved!');
+      });
+    }
+  })
+})
+// request(url, (error, response, html) => {
+//   if (!error && response.statusCode === 200) {
+//     fs.writeFile('douban-top250.html', html, (err) => {
+//       if (err) throw err;
+//       console.log('The file has been saved!');
+//     });
+//   }
+// });
